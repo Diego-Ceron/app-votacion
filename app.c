@@ -141,6 +141,35 @@ void datos_ciudadano(struct ciudadano *c, struct fecha votacion) {
 
 }
 
+void escribir_archivo(const struct ciudadano *c, const char *nombre_archivo) {
+    FILE *archivo = fopen(nombre_archivo, "w");
+    if (!archivo) {
+        perror("Error al abrir el archivo");
+        return;
+    }
+
+    fprintf(archivo, "Nombre completo: %s %s %s %s\n",
+            c->primer_nombre,
+            strcmp(c->segundo_nombre, "N/A") == 0 ? "" : c->segundo_nombre,
+            c->apellido_paterno,
+            c->apellido_materno);
+    fprintf(archivo, "CURP: %s\n", c->curp);
+    fprintf(archivo, "Email: %s\n", c->email);
+    fprintf(archivo, "Telefono: %s\n", c->telefono);
+    fprintf(archivo, "Edad: %d\n", c->edad);
+    fprintf(archivo, "Distrito: %d\n", c->distrito);
+    fprintf(archivo, "Direccion:\n");
+    fprintf(archivo, "  Calle: %d\n", c->direccion.calle);
+    fprintf(archivo, "  Numero exterior: %d\n", c->direccion.numero_exterior);
+    fprintf(archivo, "  Cruzamientos: %s\n", c->direccion.cruzamientos);
+    fprintf(archivo, "  Colonia: %s\n", c->direccion.colonia);
+    fprintf(archivo, "  Ciudad: %s\n", c->direccion.ciudad);
+    fprintf(archivo, "  Estado: %s\n", c->direccion.estado);
+    fprintf(archivo, "  Codigo postal: %d\n", c->direccion.codigo_postal);
+
+    fclose(archivo);
+}
+
 void liberar_memoria(struct ciudadano *c) {
     free(c->primer_nombre);
     free(c->segundo_nombre);
@@ -170,6 +199,7 @@ int main() {
                strcmp(ciudadano.segundo_nombre, "N/A") == 0 ? "" : ciudadano.segundo_nombre,
                ciudadano.apellido_paterno,
                ciudadano.apellido_materno);
+               escribir_archivo(&ciudadano, "datos_ciudadano.txt");
     } else {
         printf("%s %s %s %s NO puede votar.\n",
                ciudadano.primer_nombre,
